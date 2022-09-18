@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const duneQuery_execute = "https://api.dune.com/api/v1/query/1279213/execute";
 const duneQuery_results = "https://api.dune.com/api/v1/query/1279213/execute";
@@ -43,9 +43,7 @@ export const fetcher = async (url: any, options: any) => {
 };
 
 export const useHasCompleted = (execution_id: string | undefined) => {
-  const [hasCompleted, setHasCompleted] = useState<boolean | undefined>(
-    undefined
-  );
+  const [hasCompleted, setHasCompleted] = useState<boolean>();
 
   useEffect(() => {
     if (execution_id) {
@@ -69,11 +67,11 @@ export const useHasCompleted = (execution_id: string | undefined) => {
   return [hasCompleted];
 };
 
-export const useHasConnectionTo = async (addr: string) => {
-  const [hasConnection, setHasConnection] = useState();
+export const useHasConnectionTo = (addr: string) => {
+  const [hasConnection, setHasConnection] = useState<boolean>();
   const [execution_id, setExecution_id] = useState();
   const [hasCompleted] = useHasCompleted(execution_id);
-  let hasConection: boolean = false;
+  //   let hasConection: boolean = false;
 
   useEffect(() => {
     if (addr) {
@@ -91,6 +89,7 @@ export const useHasConnectionTo = async (addr: string) => {
           },
         }),
       }).then((response) => {
+        console.log("execution", response);
         if (response.execution_id) {
           setExecution_id(response.execution_id);
         }
@@ -99,12 +98,17 @@ export const useHasConnectionTo = async (addr: string) => {
   }, [addr]);
 
   useEffect(() => {
-    if (execution_id) {
-      setHasConnection(execution_id);
+    if (hasCompleted && execution_id) {
+      const executionResults = fetcher(
+        getDuneQueryResults(execution_id),
+        executionRequestOptions
+      ).then((response) => {
+        setHasConnection(response.result.rows.length > 0);
+      });
     }
-  }, [execution_id]);
+  }, [hasCompleted]);
 
-  return [hasConection];
+  return [hasConnection];
 
   //   console.log(executeQuery);
 
@@ -137,14 +141,15 @@ export const useHasConnectionTo = async (addr: string) => {
 };
 
 export const useTopReceiveAccounts = (from_addr: string) => {
-  const [hasConnection, setHasConnection] = useState();
+  const [topReceive, setTopReceive] = useState<boolean>();
   const [execution_id, setExecution_id] = useState();
-  let hasConection: boolean = false;
+  const [hasCompleted] = useHasCompleted(execution_id);
+  //   let hasConection: boolean = false;
 
   useEffect(() => {
     if (from_addr) {
       // execute the query
-      fetcher(getDuneQueryExecute("1280135"), {
+      const executeQuery = fetcher(getDuneQueryExecute("1280135"), {
         method: "POST",
         headers: {
           "x-dune-api-key": process.env.NEXT_PUBLIC_DUNE_API_KEY,
@@ -156,6 +161,7 @@ export const useTopReceiveAccounts = (from_addr: string) => {
           },
         }),
       }).then((response) => {
+        console.log("execution", response);
         if (response.execution_id) {
           setExecution_id(response.execution_id);
         }
@@ -164,10 +170,58 @@ export const useTopReceiveAccounts = (from_addr: string) => {
   }, [from_addr]);
 
   useEffect(() => {
-    if (execution_id) {
-      setHasConnection(execution_id);
+    if (hasCompleted && execution_id) {
+      const executionResults = fetcher(
+        getDuneQueryResults(execution_id),
+        executionRequestOptions
+      ).then((response) => {
+        setTopReceive(response.result.rows);
+      });
     }
-  }, [execution_id]);
+  }, [hasCompleted]);
 
-  return [hasConection];
+  return [topReceive];
+};
+
+export const useTopSendAccounts = (from_addr: string) => {
+  const [topSend, setTopSend] = useState<boolean>();
+  const [execution_id, setExecution_id] = useState();
+  const [hasCompleted] = useHasCompleted(execution_id);
+  //   let hasConection: boolean = false;
+
+  useEffect(() => {
+    if (from_addr) {
+      // execute the query
+      const executeQuery = fetcher(getDuneQueryExecute("1280047"), {
+        method: "POST",
+        headers: {
+          "x-dune-api-key": process.env.NEXT_PUBLIC_DUNE_API_KEY,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query_parameters: {
+            from_addr: from_addr,
+          },
+        }),
+      }).then((response) => {
+        console.log("execution", response);
+        if (response.execution_id) {
+          setExecution_id(response.execution_id);
+        }
+      });
+    }
+  }, [from_addr]);
+
+  useEffect(() => {
+    if (hasCompleted && execution_id) {
+      const executionResults = fetcher(
+        getDuneQueryResults(execution_id),
+        executionRequestOptions
+      ).then((response) => {
+        setTopSend(response.result.rows);
+      });
+    }
+  }, [hasCompleted]);
+
+  return [topSend];
 };
