@@ -148,11 +148,7 @@ interface CenteredContentProps {
 const CenteredShape = ({ setAddr }: CenteredContentProps) => {
   return (
     <div className="center__container relative">
-      <form
-        action="/send-data-here"
-        method="post"
-        className="form__addr flex flex-col gap-4 z-10"
-      >
+      <div className="form__addr flex flex-col gap-4 z-10">
         {/* <label>First name:</label> */}
         <input
           type="text"
@@ -161,8 +157,14 @@ const CenteredShape = ({ setAddr }: CenteredContentProps) => {
           placeholder="ETH ADDRESS..."
         />
 
-        <button onClick={() => {}}>Inspect</button>
-      </form>
+        <button
+          onClick={(e) => {
+            console.log(e);
+          }}
+        >
+          Inspect
+        </button>
+      </div>
       <div className="absolute">
         <Image
           src={asset_center}
