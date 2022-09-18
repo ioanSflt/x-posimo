@@ -2,6 +2,93 @@ import { ConnectButton } from "@rainbow-me/rainbowkit"
 import type { NextPage } from "next"
 import Head from "next/head"
 
+function LeftContent() {
+  return (
+    <div className="w-full max-w-sm flex flex-col gap-4">
+      <div className="flex gap-4">
+        <div className="p-4 flex flex-col space-y-4 border border-zinc-300">
+          <h2 className="text-white font-bold">YOUR PART OF DEX</h2>
+          <ul>
+            {["UNISWAP", "fawegw", "vrvreb", "fveqwgrgq"].map((dex) => {
+              return <li>{dex}</li>
+            })}
+          </ul>
+        </div>
+        <div className="p-4 flex flex-col space-y-4 border border-zinc-300">
+          <div className="w-24 h-2 bg-white" />
+          <p>Donec ligula justo, interdum a.</p>
+        </div>
+      </div>
+      <div className="p-4 flex flex-col space-y-4 border border-zinc-300">
+        <h2 className="text-white font-bold font-quantico flex flex-col items-end justify-center">
+          <div className="text-xl w-full">YOU ARE A</div>
+          <div className="text-orange-500 text-4xl w-full">TORNADOCHASH</div>
+          <div className="text-xl">USER</div>
+        </h2>
+      </div>
+      <div className="p-4 flex flex-col space-y-4 border border-zinc-300">
+        <h2 className="text-white font-bold">
+          TOP ACCOUNTS YOU RECEIVED ETH FROM
+        </h2>
+        <ul>
+          {[...new Array(3)].map((_, i) => {
+            return (
+              <li className="flex items-center justify-between">
+                0x00...abc{i}
+                <span>{Math.random() * 3000}</span>
+              </li>
+            )
+          })}
+        </ul>
+      </div>
+    </div>
+  )
+}
+
+function RightContent() {
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex gap-4">
+        <div className="p-4 flex flex-col space-y-4 border border-zinc-300">
+          <h2 className="text-white font-bold">
+            TOP ACCOUNTS YOU RECEIVED ETH FROM
+          </h2>
+          <ul>
+            {[...new Array(3)].map((_, i) => {
+              return (
+                <li className="flex items-center justify-between">
+                  0x00...abc{i}
+                  <span>{Math.random() * 3000}</span>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+        <div className="flex flex-col gap-4">
+          <div className="p-4 flex flex-col space-y-4 border border-zinc-300">
+            {/** */}
+          </div>
+          <div className="p-4 flex flex-col space-y-4 border border-zinc-300">
+            <h2 className="text-white font-bold">
+              Number of transactions in the PAST 30 days
+            </h2>
+            <strong className="text-[5rem] font-quantico">78</strong>
+          </div>
+        </div>
+      </div>
+      <div className="p-4 flex flex-col space-y-4 border border-zinc-300">
+        <blockquote>
+          <p>
+            Ut lobortis ornare lacinia. Mauris venenatis faucibus mi eu semper.
+            Mauris a libero non dui rhoncus fermentum. Etiam sit amet blandit
+            justo
+          </p>
+          <span>- AUTHOR</span>
+        </blockquote>
+      </div>
+    </div>
+  )
+}
 const Home: NextPage = () => {
   return (
     <div>
@@ -14,8 +101,18 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <ConnectButton />
+      <main className="bg-black fixed inset-0 w-screen h-screen text-zinc-400">
+        <section className="flex items-center justify-end p-4">
+          <div className="flex flex-col">
+            <span className="text-sm">BALANCE</span>
+            <strong className="text-white">23231.032323 ETH</strong>
+          </div>
+        </section>
+        <section className="flex">
+          <LeftContent />
+          <div className="w-full flex-grow"> {/** */}</div>
+          <RightContent />
+        </section>
       </main>
     </div>
   )
