@@ -1,12 +1,14 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit"
 import type { NextPage } from "next"
 import Head from "next/head"
+import Image from "next/image"
+import asset_center from "../assets/center.svg"
 
 function LeftContent() {
   return (
     <div className="w-full max-w-sm flex flex-col gap-4">
       <div className="flex gap-4">
-        <div className="p-4 flex flex-col space-y-4 border border-zinc-300">
+        <div className="p-4 flex flex-col space-y-4 border border-zinc-500">
           <h2 className="text-white font-bold">YOUR PART OF DEX</h2>
           <ul>
             {["UNISWAP", "fawegw", "vrvreb", "fveqwgrgq"].map((dex) => {
@@ -14,19 +16,19 @@ function LeftContent() {
             })}
           </ul>
         </div>
-        <div className="p-4 flex flex-col space-y-4 border border-zinc-300">
+        <div className="p-4 flex flex-col space-y-4 border border-zinc-500">
           <div className="w-24 h-2 bg-white" />
           <p>Donec ligula justo, interdum a.</p>
         </div>
       </div>
-      <div className="p-4 flex flex-col space-y-4 border border-zinc-300">
+      <div className="p-4 flex flex-col space-y-4 border border-zinc-500">
         <h2 className="text-white font-bold font-quantico flex flex-col items-end justify-center">
           <div className="text-xl w-full">YOU ARE A</div>
           <div className="text-orange-500 text-4xl w-full">TORNADOCHASH</div>
           <div className="text-xl">USER</div>
         </h2>
       </div>
-      <div className="p-4 flex flex-col space-y-4 border border-zinc-300">
+      <div className="p-4 flex flex-col space-y-4 border border-zinc-500">
         <h2 className="text-white font-bold">
           TOP ACCOUNTS YOU RECEIVED ETH FROM
         </h2>
@@ -49,7 +51,7 @@ function RightContent() {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-4">
-        <div className="p-4 flex flex-col space-y-4 border border-zinc-300">
+        <div className="p-4 flex flex-col space-y-4 border border-zinc-500">
           <h2 className="text-white font-bold">
             TOP ACCOUNTS YOU RECEIVED ETH FROM
           </h2>
@@ -65,10 +67,10 @@ function RightContent() {
           </ul>
         </div>
         <div className="flex flex-col gap-4">
-          <div className="p-4 flex flex-col space-y-4 border border-zinc-300">
+          <div className="p-4 flex flex-col space-y-4 border border-zinc-500">
             {/** */}
           </div>
-          <div className="p-4 flex flex-col space-y-4 border border-zinc-300">
+          <div className="p-4 flex flex-col space-y-4 border border-zinc-500">
             <h2 className="text-white font-bold">
               Number of transactions in the PAST 30 days
             </h2>
@@ -76,7 +78,7 @@ function RightContent() {
           </div>
         </div>
       </div>
-      <div className="p-4 flex flex-col space-y-4 border border-zinc-300">
+      <div className="p-4 flex flex-col space-y-4 border border-zinc-500">
         <blockquote>
           <p>
             Ut lobortis ornare lacinia. Mauris venenatis faucibus mi eu semper.
@@ -88,6 +90,10 @@ function RightContent() {
       </div>
     </div>
   )
+}
+
+function CenteredShape() {
+  return <Image src={asset_center} />
 }
 const Home: NextPage = () => {
   return (
@@ -110,9 +116,20 @@ const Home: NextPage = () => {
         </section>
         <section className="flex">
           <LeftContent />
-          <div className="w-full flex-grow"> {/** */}</div>
+          <div className="w-full flex-grow">
+            <CenteredShape />
+            <div className="font-quantico text-[7rem] transform origin-top text-white -rotate-90">
+              X-POSIMO
+            </div>
+          </div>
           <RightContent />
         </section>
+        <div className="flex relative -top-4 ml-[10rem]">
+          <div className="p-4 backdrop-blur-md border border-zinc-400">
+            <h4>ADDRESS</h4>
+            <p>0x0231321awdadaw0d123123</p>
+          </div>
+        </div>
       </main>
     </div>
   )
