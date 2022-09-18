@@ -2,10 +2,12 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import asset_center from "../assets/center.svg";
+import asset_center2 from "../assets/center2.svg";
 import {
   useHasConnectionTo,
+  useNbrTxs,
   useTopReceiveAccounts,
   useTopSendAccounts,
 } from "../utils/requests";
@@ -24,8 +26,8 @@ const LeftContent = ({ hasConnection, topReceive }: LeftContentProps) => {
         <div className="p-4 flex flex-col space-y-4 border border-zinc-500">
           <h2 className="text-white font-bold">YOUR PART OF DEX</h2>
           <ul>
-            {["UNISWAP", "fawegw", "vrvreb", "fveqwgrgq"].map((dex) => {
-              return <li>{dex}</li>;
+            {["UNISWAP", "fawegw", "vrvreb", "fveqwgrgq"].map((dex, i) => {
+              return <li key={`dexes-${i}`}>{dex}</li>;
             })}
           </ul>
         </div>
@@ -77,8 +79,9 @@ const LeftContent = ({ hasConnection, topReceive }: LeftContentProps) => {
 
 interface RightContentProps {
   topSend: any;
+  nbrTxs: any;
 }
-const RightContent = ({ topSend }: RightContentProps) => {
+const RightContent = ({ topSend, nbrTxs }: RightContentProps) => {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-4">
@@ -118,7 +121,9 @@ const RightContent = ({ topSend }: RightContentProps) => {
             <h2 className="text-white font-bold">
               Number of transactions in the PAST 30 days
             </h2>
-            <strong className="text-[5rem] font-quantico">78</strong>
+            <strong className="text-[5rem] font-quantico">
+              {nbrTxs ?? "78"}
+            </strong>
           </div>
         </div>
       </div>
@@ -136,10 +141,48 @@ const RightContent = ({ topSend }: RightContentProps) => {
   );
 };
 
-function CenteredShape() {
-  return <Image src={asset_center} />;
+interface CenteredContentProps {
+  setAddr: any;
 }
+
+const CenteredShape = ({ setAddr }: CenteredContentProps) => {
+  return (
+    <div className="center__container relative">
+      <form
+        action="/send-data-here"
+        method="post"
+        className="form__addr flex flex-col gap-4 z-10"
+      >
+        {/* <label>First name:</label> */}
+        <input
+          type="text"
+          id="first"
+          name="first"
+          placeholder="ETH ADDRESS..."
+        />
+
+        <button onClick={() => {}}>Inspect</button>
+      </form>
+      <div className="absolute">
+        <Image
+          src={asset_center}
+          alt={"Background shape"}
+          className="center__image"
+        />
+      </div>
+      <div className="absolute bottom-0 right-0">
+        <Image
+          src={asset_center2}
+          alt={"Background shape2"}
+          className="center__image2"
+        />
+      </div>
+    </div>
+  );
+};
+
 const Home: NextPage = () => {
+  const [addr, setAddr] = useState();
   const [hasConnection] = useHasConnectionTo(
     "\\xbb1332e692e701bfc0e3c19ffd4dd619c599ea2a"
   );
@@ -149,6 +192,12 @@ const Home: NextPage = () => {
   const [topSend] = useTopSendAccounts(
     "\\xbb1332e692e701bfc0e3c19ffd4dd619c599ea2a"
   );
+  const [nbrTxs] = useNbrTxs("\\xbb1332e692e701bfc0e3c19ffd4dd619c599ea2a");
+
+  const setAddrCallback = (in_addr: any) => {
+    console.log(addr);
+    setAddr(in_addr);
+  };
 
   useEffect(() => {
     console.log(hasConnection);
@@ -174,12 +223,12 @@ const Home: NextPage = () => {
         <section className="flex">
           <LeftContent hasConnection={hasConnection} topReceive={topReceive} />
           <div className="w-full flex-grow">
-            <CenteredShape />
+            <CenteredShape setAddr={setAddrCallback} />
             <div className="font-quantico text-[7rem] transform origin-top text-white -rotate-90">
               X-POSIMO
             </div>
           </div>
-          <RightContent topSend={topSend} />
+          <RightContent topSend={topSend} nbrTxs={nbrTxs} />
         </section>
         <div className="flex relative -top-4 ml-[10rem]">
           <div className="p-4 backdrop-blur-md border border-zinc-400">

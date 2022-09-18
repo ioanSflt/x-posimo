@@ -3,3 +3,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* .center__container {
+  position: relative;
+}
+
+.center__image2 {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+} */
+
+.form__addr {
+  position: absolute;
+  top: 10%;
+  left: 2%;
+  /* transform: translate(-50%, -50%); */
+}
+
+.form__addr input {
+  height: 32px;
+  border: 2px solid black;
+  background: transparent;
+}
+
+.form__addr button {
+  height: 32px;
+  border: 2px solid black;
+}

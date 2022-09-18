@@ -60,7 +60,7 @@ export const useHasCompleted = (execution_id: string | undefined) => {
             clearInterval(checkInterval);
           }
         });
-      }, 500);
+      }, 1000);
     }
   }, [execution_id]);
 
@@ -224,4 +224,48 @@ export const useTopSendAccounts = (from_addr: string) => {
   }, [hasCompleted]);
 
   return [topSend];
+};
+
+export const useNbrTxs = (from_addr: string) => {
+  const [nbrTxs, setNbrTxs] = useState<boolean>();
+  const [execution_id, setExecution_id] = useState();
+  const [hasCompleted] = useHasCompleted(execution_id);
+  //   let hasConection: boolean = false;
+
+  useEffect(() => {
+    if (from_addr) {
+      // execute the query
+      const executeQuery = fetcher(getDuneQueryExecute("1280150"), {
+        method: "POST",
+        headers: {
+          "x-dune-api-key": process.env.NEXT_PUBLIC_DUNE_API_KEY,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query_parameters: {
+            from_addr: from_addr,
+          },
+        }),
+      }).then((response) => {
+        console.log("execution", response);
+        if (response.execution_id) {
+          setExecution_id(response.execution_id);
+        }
+      });
+    }
+  }, [from_addr]);
+
+  useEffect(() => {
+    if (hasCompleted && execution_id) {
+      const executionResults = fetcher(
+        getDuneQueryResults(execution_id),
+        executionRequestOptions
+      ).then((response) => {
+        console.log("Number", response);
+        setNbrTxs(response.result.rows[0].count);
+      });
+    }
+  }, [hasCompleted]);
+
+  return [nbrTxs];
 };
